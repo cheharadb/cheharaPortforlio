@@ -172,6 +172,8 @@
             <div class="field">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" required />
+		<!-- Redirect after submission -->
+    		<input type="hidden" name="_next" value="https://yourgithubpage.com/index.html">
             </div>
             <div class="field">
                 <label for="email">Email</label>
@@ -188,32 +190,6 @@
     </form>
     <p id="successMessage" style="display: none; color: green; font-weight: bold;">✅ Message sent successfully!</p>
 </section>
-
-<script>
-document.getElementById("contactForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevents default form submission
-
-    // Create FormData object to send data
-    const formData = new FormData(this);
-
-    fetch("https://formsubmit.co/ajax/cheharadevendra@gmail.com", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById("successMessage").style.display = "block"; // Show success message
-            setTimeout(() => {
-                window.location.href = "index.html"; // Redirect to home page after 3 seconds
-            }, 3000);
-        } else {
-            alert("Error sending message. Please try again.");
-        }
-    })
-    .catch(error => alert("Something went wrong!"));
-});
-</script>
 
     <section class="split contact">
         <section class="alt">
