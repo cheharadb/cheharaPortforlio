@@ -1,25 +1,34 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = htmlspecialchars($_POST["name"]);
     $email = htmlspecialchars($_POST["email"]);
     $message = htmlspecialchars($_POST["message"]);
 
-    $to = "cheharadevendra@gmail.com";  // Replace with your email
-    $subject = "New Contact Form Submission";
-    $headers = "From: $email\r\n";
-    $headers .= "Reply-To: $email\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    $mail = new PHPMailer(true);
+    
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; 
+        $mail->SMTPAuth = true;
+        $mail->Username = 'cheharadevendra@gmail.com'; // Your email
+        $mail->Password = '77888877cv'; // Use App Password if using Gmail
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-    $email_body = "You have received a new message from your website contact form:\n\n";
-    $email_body .= "Name: $name\n";
-    $email_body .= "Email: $email\n";
-    $email_body .= "Message:\n$message\n";
+        $mail->setFrom($email, $name);
+        $mail->addAddress('cheharadevendra@gmail.com'); // Your email
+        $mail->Subject = 'New Contact Form Submission';
+        $mail->Body = "Name: $name\nEmail: $email\nMessage:\n$message";
 
-    // Send the email
-    if (mail($to, $subject, $email_body, $headers)) {
+        $mail->send();
         echo "Message sent successfully!";
-    } else {
-        echo "Error sending message. Please try again.";
+    } catch (Exception $e) {
+        echo "Error: {$mail->ErrorInfo}";
     }
 }
 ?>
