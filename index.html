@@ -167,20 +167,10 @@
 				<!-- Footer -->
 					<footer id="footer">
     <section>
-    <form id="contactForm" method="POST" action="https://formsubmit.co/cheharadevendra@gmail.com">
-        <!-- Reply-to email field -->
+    <form id="contactForm" method="POST" action="https://formsubmit.co/ajax/cheharadevendra@gmail.com">
         <input type="hidden" name="_replyto" value="email">
-
-        <!-- Redirect to home page after submission -->
-        <input type="hidden" name="_next" value="https://chehara1995.github.io/cheharaPo/">
-
-        <!-- Custom email subject -->
         <input type="hidden" name="_subject" value="New Contact Form Submission!">
-
-        <!-- Disable reCAPTCHA (optional) -->
         <input type="hidden" name="_captcha" value="false">
-
-        <!-- Autoresponse (optional) -->
         <input type="hidden" name="_autoresponse" value="Thank you for reaching out! We will get back to you soon.">
 
         <div class="fields">
@@ -206,7 +196,29 @@
     <p id="successMessage" style="display: none; color: green; font-weight: bold;">✅ Message sent successfully!</p>
 </section>
 
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevents page refresh
 
+    const formData = new FormData(this);
+
+    fetch("https://formsubmit.co/ajax/cheharadevendra@gmail.com", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("successMessage").style.display = "block"; // Show success message
+            this.reset(); // Clear the form
+        } else {
+            alert("Error sending message. Please try again.");
+        }
+    })
+    .catch(error => alert("Something went wrong!"));
+});
+</script>
 
     <section class="split contact">
         <section class="alt">
