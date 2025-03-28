@@ -162,6 +162,106 @@
 
 				<!-- Footer -->
 					<footer id="footer">
+
+						<!-- Chatbot Toggle Button -->
+						<div id="chatbot-toggle" onclick="toggleChatbot()">💬 Ask Me Anything – Chatbot</div>
+
+						<!-- Chatbot Window -->
+						<div id="chatbot">
+						  <div class="chat-header">
+							<span>CheharaBot 🤖</span>
+							<span style="cursor: pointer;" onclick="toggleChatbot()">✖</span>
+						  </div>
+						  <div id="chatlog"></div>
+						  <div id="chat-options">
+							<button onclick="preset('about')" class="chat-option-btn">About Me</button>
+							<button onclick="preset('experience')" class="chat-option-btn">Experience</button>
+							<button onclick="preset('contact')" class="chat-option-btn">Contact</button>
+						  </div>
+						  <div style="display: flex; border-top: 1px solid #ddd;">
+							<input type="text" id="chatInput" placeholder="Ask me anything..." />
+							<button onclick="sendMessage()" class="send-btn">Send</button>
+						  </div>
+						</div>
+							<script>
+								 function toggleChatbot() {
+									const bot = document.getElementById("chatbot");
+									const toggle = document.getElementById("chatbot-toggle");
+									if (bot.style.display === "none") {
+										bot.style.display = "block";
+										toggle.style.display = "none";
+									} else {
+										bot.style.display = "none";
+										toggle.style.display = "flex";
+									}
+									}
+
+									async function sendMessage(customMessage) {
+									const input = document.getElementById("chatInput");
+									const message = customMessage || input.value.trim();
+									if (message === "") return;
+
+									const log = document.getElementById("chatlog");
+									log.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+
+									let reply = "";
+									const msg = message.toLowerCase();
+
+									if (msg.includes("about")) {
+										reply = "I'm Chehara, a Data Scientist specializing in data analytics, ML, and solving real-world problems.";
+									} else if (msg.includes("experience")) {
+										reply = "I have 6+ years of experience in IT, systems, and data analytics. I’m currently pursuing my MS in Data Science.";
+									} else if (msg.includes("contact")) {
+										reply = "You can reach me at cheharadevendra@gmail.com or on LinkedIn.";
+									} else {
+										reply = "I'm not sure how to answer that. Let me check with AI...";
+										log.innerHTML += `<div><strong>CheharaBot:</strong> ${reply}</div>`;
+
+										const aiReply = await fetchFromHuggingFace(message);
+										log.innerHTML += `<div><strong>CheharaBot:</strong> ${aiReply}</div>`;
+										input.value = "";
+										log.scrollTop = log.scrollHeight;
+										return;
+									}
+
+									log.innerHTML += `<div><strong>CheharaBot:</strong> ${reply}</div>`;
+									input.value = "";
+									log.scrollTop = log.scrollHeight;
+									}
+
+									async function fetchFromHuggingFace(prompt) {
+									const response = await fetch("https://chatbot-backend-j9jp.onrender.com/ask-ai", {
+										method: "POST",
+										headers: {
+										"Content-Type": "application/json"
+										},
+										body: JSON.stringify({ prompt })
+									});
+
+									const result = await response.json();
+									console.log("LLaMA AI response:", result); // Debug output
+
+									try {
+										return result.message || "Sorry, I couldn't get a response.";
+									} catch {
+										return "Sorry, something went wrong fetching the AI response.";
+									}
+									}
+
+									function preset(type) {
+									const lookup = {
+										about: "Tell me about yourself",
+										experience: "What is your experience?",
+										contact: "How can I contact you?"
+									};
+
+									const input = document.getElementById("chatInput");
+									input.value = lookup[type];
+									sendMessage(lookup[type]);
+									}
+							  </script>
+
+						
     <section>
     <form id="contactForm" method="POST" action="https://formsubmit.co/ajax/cheharadevendra@gmail.com">
         <input type="hidden" name="_replyto" value="email">
